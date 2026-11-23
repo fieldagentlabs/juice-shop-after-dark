@@ -115,6 +115,7 @@ import { serveQuarantineFiles } from './routes/quarantineServer'
 import { showProductReviews } from './routes/showProductReviews'
 import { nftMintListener, walletNFTVerify } from './routes/nftMint'
 import { createProductReviews } from './routes/createProductReviews'
+import * as afterDark from './routes/afterDark'
 import { getWalletBalance, addWalletBalance } from './routes/wallet'
 import { retrieveAppConfiguration } from './routes/appConfiguration'
 import { updateProductReviews } from './routes/updateProductReviews'
@@ -671,6 +672,14 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
   /* NoSQL API endpoints */
   app.get('/rest/products/:id/reviews', showProductReviews())
   app.put('/rest/products/:id/reviews', utils.asyncHandler(createProductReviews()))
+  /* Juice Shop After Dark training features */
+  app.post('/rest/loyalty/redeem', utils.asyncHandler(afterDark.redeemLoyalty()))
+  app.get('/rest/invoice', afterDark.downloadInvoice())
+  app.post('/rest/giftcard/preview', afterDark.previewGiftCard())
+  app.get('/rest/partner/token', afterDark.partnerToken())
+  app.get('/rest/partner/orders', afterDark.partnerOrders())
+  app.get('/rest/afterdark/profile/:id', afterDark.showProfile())
+  app.patch('/rest/afterdark/profile/:id', afterDark.updateProfile())
   app.patch('/rest/products/reviews', security.isAuthorized(), updateProductReviews())
   app.post('/rest/products/reviews', security.isAuthorized(), utils.asyncHandler(likeProductReviews()))
 
